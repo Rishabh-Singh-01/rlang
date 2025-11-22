@@ -1,43 +1,45 @@
 #include "disassembler.h"
 #include "./../../core/vm/vm.h"
 #include "./../../utils/assertions.h"
+#include <stdint.h>
 
-uint8_t *disassembleInstAndGiveNextInstPtr(uint8_t *ptr) {
+int disassembleInstAndGiveInstLen(Chunk *pChunk, uint8_t *ptr) {
   uint8_t opcode = *ptr;
-  uint8_t *nextInstPtr = ptr;
+  int instLen = 0;
+
   switch (opcode) {
   case OP_RETURN:
-    printf("OP_RETURN: %hhu", OP_RETURN);
-    nextInstPtr++;
+    printf("OP_RETURN: %hhu\n", OP_RETURN);
+    instLen++;
+    break;
+  case OP_CONSTANT:
+    printf("OP_CONSTANT: %hhu\n", OP_CONSTANT);
+    instLen++;
+    uint8_t *pConstantVal = ptr + instLen;
+    uint8_t constantValIdx = *pConstantVal;
+    Value constantVal = pChunk->Constants.Values[constantValIdx];
+    printf("Corresponding Constant Value: %f\n", constantVal);
+    instLen++;
+    break;
   default:
     ASSERT(false, "Invalid Disassemble Instruction state (%hhu)\n", opcode);
   }
 
-  return nextInstPtr;
-}
-
-bool checkIfDisassembleCompleted(uint8_t *curPtr, uint8_t *nextPtr) {
-  ASSERT(curPtr != NULL,
-         "Cur Ptr should not be NULL during DisassembleChunk (%p)\n", curPtr);
-  ASSERT(nextPtr != NULL,
-         "Next Ptr should not be NULL during DisassembleChunk (%p)\n", nextPtr);
-
-  return curPtr == nextPtr;
+  return instLen;
 }
 
 void DisassembleChunk(Chunk *pChunk) {
-  printf("------ Chunk Info Start -------\n");
   uint8_t *ptr = pChunk->Code;
-  uint8_t *nextInstPtr = ptr;
-  bool isChunkDisassembled = false;
+  int totalBytesCount = pChunk->ByteCount;
+  int curInstLen = 0;
 
-  while (!isChunkDisassembled) {
-    printf("------ Instruction Start -------\n");
-    nextInstPtr = disassembleInstAndGiveNextInstPtr(ptr);
-    isChunkDisassembled = checkIfDisassembleCompleted(ptr, nextInstPtr);
-    ptr = nextInstPtr;
-    printf("------ Instruction End -------\n");
+  while (totalBytesCount > 0) {
+    printf(">>>>>>>>>>>>>\n");
+
+    curInstLen = disassembleInstAndGiveInstLen(pChunk, ptr);
+    totalBytesCount -= curInstLen;
+    ptr += curInstLen;
+
+    printf("<<<<<<<<<<<<<\n");
   }
-
-  printf("------ Chunk Info End -------\n");
 }
