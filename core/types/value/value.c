@@ -9,7 +9,7 @@ void InitValueArray(ValueArray *pValueArray) {
 }
 
 void WriteValueArray(ValueArray *pValueArray, Value value) {
-  ASSERT(pValueArray->_capacity <= pValueArray->ByteCount,
+  ASSERT(pValueArray->_capacity >= pValueArray->ByteCount,
          "ValueArray capacity (%d) should not smaller than its byte count (%d)",
          pValueArray->_capacity, pValueArray->ByteCount);
 

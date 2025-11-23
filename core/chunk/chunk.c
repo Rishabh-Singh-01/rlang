@@ -3,6 +3,7 @@
 #include "./../../utils/arraylist.c"
 #include "./../../utils/assertions.h"
 #include "./../types/value/value.c"
+#include <stdio.h>
 
 void InitChunk(Chunk *pChunk) {
   pChunk->_capacity = 0;
