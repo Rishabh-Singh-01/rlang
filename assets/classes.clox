@@ -1,0 +1,14 @@
+class songs {
+    super();
+
+    fun printSong() {
+        var str;
+        if (this.curSong == "SoftBoy") {
+            str = "SoftBoy";
+        } else {
+            // do nothing
+        }
+        print str;
+    }
+}
+

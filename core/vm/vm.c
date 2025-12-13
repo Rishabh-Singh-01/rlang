@@ -1,7 +1,5 @@
 #include "vm.h"
 #include "./../../utils/assertions.h"
-#include <stdint.h>
-#include <stdio.h>
 
 VM vm;
 
@@ -91,8 +89,16 @@ INTERPRET_RESULT runVM() {
   }
 }
 
-void Interpret(Chunk *pChunk) {
-  vm.Chunk = pChunk;
-  vm.Ip = vm.Chunk->Code;
-  runVM();
+INTERPRET_RESULT Interpret(const char *pfile) {
+  ASSERT(pfile != NULL, "File (%s) should not be NULL.", pfile);
+
+  return Compile(pfile);
 }
+
+// void Interpret(Chunk *pChunk) {
+//   ASSERT(pChunk != NULL, "Chunk (%p) should be initialized.", pChunk);
+//
+//   vm.Chunk = pChunk;
+//   vm.Ip = vm.Chunk->Code;
+//   runVM();
+// }

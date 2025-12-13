@@ -1,37 +1,22 @@
+#include "./utils/files.c"
 #include "core/chunk/chunk.c"
+#include "core/compiler/compiler.c"
+#include "core/scanner/scanner.c"
 #include "core/vm/vm.c"
 #include "debug/disassembler/disassembler.c"
 
 int main() {
-  Chunk chunk;
   InitVM();
-  InitChunk(&chunk);
 
-  int constIdx = AddConstant(&chunk, 4);
-  WriteChunk(&chunk, OP_CONSTANT, 6);
-  WriteChunk(&chunk, constIdx, 6);
+  // TODO: only supporting read file (no REPL); do it later
+  //
 
-  constIdx = AddConstant(&chunk, 2);
-  WriteChunk(&chunk, OP_CONSTANT, 6);
-  WriteChunk(&chunk, constIdx, 6);
+  // directly pass the stuff in Interpret
+  // interpret will complile the frontend to tokens (no need to load it ever)
+  INTERPRET_RESULT result = Interpret("./assets/classes.clox");
+  printf("Found the interpret result as %d", result);
+  //
 
-  WriteChunk(&chunk, OP_ADD, 6);
-
-  constIdx = AddConstant(&chunk, 3);
-  WriteChunk(&chunk, OP_CONSTANT, 6);
-  WriteChunk(&chunk, constIdx, 6);
-
-  WriteChunk(&chunk, OP_DIVIDE, 6);
-  WriteChunk(&chunk, OP_NEGATE, 6);
-
-  WriteChunk(&chunk, OP_RETURN, 6);
-
-  DisassembleChunk(&chunk);
-  Interpret(&chunk);
-  printVMStack();
-
-  FreeChunk(&chunk);
   FreeVM();
-
   return 0;
 }
